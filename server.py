@@ -1,10 +1,10 @@
 import asyncio
 import tornado
-import cpuinfo, json
+import cpuinfo, json, platform
 
 class MainHandler(tornado.web.RequestHandler):
     def get(self):
-        message=cpuinfo.get_cpu_info()
+        message={"hostname": platform.node(), "cpu":cpuinfo.get_cpu_info()}
         self.write(json.dumps(message))
 
 def make_app():
