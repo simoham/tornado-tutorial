@@ -13,10 +13,17 @@ class HostnameHandler(tornado.web.RequestHandler):
         message={"hostname": platform.node()}
         self.write(json.dumps(message))
 
+class ApiHelloHandler(tornado.web.RequestHandler):
+    def get(self):
+        message={"hostname": platform.node()}
+        self.write(json.dumps(message))
+
+
 def make_app():
     return tornado.web.Application([
         (r"/", MainHandler),
         (r"/hostname", HostnameHandler),
+        (r"/api/v1.0/hello", ApiHelloHandler),
     ])
 
 async def main():
