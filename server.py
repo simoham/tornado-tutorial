@@ -7,9 +7,16 @@ class MainHandler(tornado.web.RequestHandler):
         message={"hostname": platform.node(), "cpu":cpuinfo.get_cpu_info()}
         self.write(json.dumps(message))
 
+
+class HostnameHandler(tornado.web.RequestHandler):
+    def get(self):
+        message={"hostname": platform.node()}
+        self.write(json.dumps(message))
+
 def make_app():
     return tornado.web.Application([
         (r"/", MainHandler),
+        (r"/hostname", HostnameHandler),
     ])
 
 async def main():
