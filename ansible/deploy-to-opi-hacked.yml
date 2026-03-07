@@ -1,0 +1,39 @@
+# deploy.yml
+---
+- name: Deploy Python Application
+  hosts: all
+  become: yes # Run tasks with root privileges
+  tasks:
+    - name: Create application user (if it doesn't exist)
+      ansible.builtin.user:
+        name: "{{ app_user }}"
+        state: present
+        system: true # Create a system user
+
+    - name: Create application directory
+      ansible.builtin.file:
+        path: "{{ app_dir }}"
+        state: directory
+        owner: "{{ app_user }}"
+        group: "{{ app_user }}"
+        mode: '0755'
+
+    - name: Copy application code to remote host
+      ansible.builtin.copy:
+        src: ../. # Source path on your local machine
+        dest: "{{ app_dir }}/"
+        owner: "{{ app_user }}"
+        group: "{{ app_user }}"
+        mode: '0755'
+
+    - name: Create a Python virtual environment
+      ansible.builtin.command: python3 -m venv "{{ venv_dir }}"
+      args:
+        chdir: "{{ app_dir }}"
+      become_user: "{{ app_user }}"
+
+    - name: Install dependencies in the virtual environment
+      ansible.builtin.pip:
+        requirements: "{{ app_dir }}/requirements.txt"
+        virtualenv: "{{ venv_dir }}"
+      become_user: "{{ app_user }}"
