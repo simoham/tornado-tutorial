@@ -1,1 +1,1 @@
-ansible-playbook -i inventory/hosts.yml deploy-to-vm.yaml
+ansible-playbook -i inventory/hosts.yml deploy-to-vm-ubuntu.yaml
